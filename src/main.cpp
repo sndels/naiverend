@@ -2,9 +2,9 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 #include <iostream>
-#include <random>
-#include <ctime>
 #include <sstream>
+
+#include "scene.hpp"
 
 using std::cout;
 using std::cerr;
@@ -24,8 +24,7 @@ static void errorCallback(int error, const char* description)
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GL_TRUE);
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 int main(void)
@@ -38,7 +37,7 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
-    // Set desired context hints 
+    // Set desired context hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -92,11 +91,13 @@ int main(void)
 
     cout << glGetString(GL_VERSION) << endl;
 
+    Scene scene;
+    if (!scene.init()) exit(EXIT_FAILURE);
     // Run the main loop
-    uint64_t frameNum = 0;
     while (!glfwWindowShouldClose(windowPtr)) {
-        ++frameNum;
         glfwPollEvents();
+        glClear(GL_COLOR_BUFFER_BIT);
+        scene.render();
         glfwSwapBuffers(windowPtr);
     }
 

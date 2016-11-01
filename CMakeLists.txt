@@ -12,11 +12,19 @@ if(CMAKE_BUILD_TYPE STREQUAL "")
     endif())
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    set(CLANG_COVERAGE_LINK_FLAGS  "-framework Cocoa -framework IOKit -framework CoreVideo")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CLANG_COVERAGE_LINK_FLAGS}")
+endif()
+
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 set(SOURCES
+    src/basic_program.cpp
     src/gl_core_4_1.c
     src/main.cpp
+    src/scene.cpp
+    src/shader_program.cpp
 )
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Add all source files to VS-project
@@ -47,3 +55,7 @@ else()
         target_link_libraries(${EXECUTABLE_NAME} ${GLFW_LIBRARIES})
     endif()
 endif()
+# Copy shaders to build directory
+ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/src/shader $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader)
