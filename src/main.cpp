@@ -37,11 +37,13 @@ int main(void)
         exit(EXIT_FAILURE);
     }
 
+#ifdef __APPLE__
     // Set desired context hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
 
     // Create the window
     GLFWwindow* windowPtr;
@@ -74,6 +76,8 @@ int main(void)
 
     // Set input callback
     glfwSetKeyCallback(windowPtr, keyCallback);
+	// Set vsync on
+	glfwSwapInterval(1);	
 
     // Init GL settings
     glViewport(0, 0, XRES, YRES);

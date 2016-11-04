@@ -29,11 +29,32 @@ set(SOURCES
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Add all source files to VS-project
     set(HEADERS
+        src/basic_program.hpp
         src/gl_core_4_1.h
+        src/scene.hpp
+        src/shader_program.hpp
     )
+    set(SHADERS
+        src/shader/basic_program.frag
+        src/shader/basic_program.vert
+    )
+    # Override debugger working directory
+    write_file("${PROJECT_NAME}.vcxproj.user"
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>     \
+        <Project ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">
+        <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Debug|Win32'\">
+            <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+            <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+        </PropertyGroup>
+        <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='Release|Win32'\">
+            <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+            <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+        </PropertyGroup>
+        </Project>")
+    #Config build
     add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS})
     target_link_libraries(${EXECUTABLE_NAME} "opengl32" "glfw3dll")
-    # Copy dlls to build directory
+    # Copy dlls to build directory after build
     add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy_directory
                        ${CMAKE_SOURCE_DIR}/lib/win $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>)
@@ -56,6 +77,6 @@ else()
     endif()
 endif()
 # Copy shaders to build directory
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_SOURCE_DIR}/src/shader $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader)
