@@ -35,8 +35,9 @@ bool Scene::init()
     }
 
     cam_.setProj(xres1f_, yres1f_, 90.f, 1.f, 10.f);
+    cam_.setView(vec3(0.f, 0.f, -2.f), vec3(0.f, 0.f, 0.f));
 
-    meshPos3f_ = vec3(0.125f, -1.f, 2.f);
+    meshPos3f_ = vec3(0.125f, -1.f, 0.f);
     meshScale3f_ = vec3(1.f, 1.f, 1.f);
     return true;
 }

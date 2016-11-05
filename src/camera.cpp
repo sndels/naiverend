@@ -2,10 +2,13 @@
 
 #include "math_types.hpp"
 
+using glm::mat3;
 using glm::mat4;
+using glm::vec3;
 
 Camera::Camera() :
-    projM4f_(1.f),
+    worldPos3f(0.f, 0.f, -3.f),
+    orientationM3f_(1.f),
     viewM4f_(1.f)
 {
     ;
@@ -23,7 +26,17 @@ void Camera::setProj(const float& xres, const float& yres, const float& yFov, co
 
 void Camera::setView(const glm::vec3& eye, const glm::vec3& target, const glm::vec3& up)
 {
-    ;
+    vec3 f = normalize(target - eye);
+    vec3 r = normalize(cross(up, f));
+    vec3 u = normalize(cross(f, r));
+    orientationM3f_ = mat3(r.x, u.x, f.x,
+                           r.y, u.y, f.y,
+                           r.z, u.z, f.z );
+    worldPos3f = eye;
+    viewM4f_ = mat4(         r.x,          u.x,          f.x, 0.f,
+                             r.y,          u.y,          f.y, 0.f,
+                             r.z,          u.z,          f.z, 0.f,
+                    -dot(r, eye), -dot(u, eye), -dot(f, eye), 1.f );
 }
 
 glm::mat4 Camera::getVP() const
