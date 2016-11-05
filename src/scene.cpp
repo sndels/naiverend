@@ -14,14 +14,16 @@ bool Scene::init()
 {
     if (!pg_.loadProgram()) return false;
 
-    std::vector<vec3> tri = { vec3(-1.f, -1.f, 0.f),
-                              vec3(-1.f,  1.f, 0.f),
-                              vec3( 1.f,  1.f, 0.f) };
-    glGenBuffers(1, &vbo_);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vec3)*3, tri.data(), GL_STATIC_DRAW);
-    glGenVertexArrays(1, &vao_);
-    glBindVertexArray(vao_);
+    std::vector<Vertex> verts = { {vec3( 0.f, -0.866f, -0.866f), vec3(0.f, 0.f, 0.f)},
+                                  {vec3( 1.f, -0.866f,  0.866f), vec3(0.f, 0.f, 0.f)},
+                                  {vec3(-1.f, -0.866f,  0.866f), vec3(0.f, 0.f, 0.f)},
+                                  {vec3( 0.f,  0.866f,     0.f), vec3(0.f, 0.f, 0.f)} };
+    std::vector<glm::u32vec3> faces = { glm::u32vec3(0, 1, 2),
+                                        glm::u32vec3(0, 1, 3),
+                                        glm::u32vec3(1, 2, 3),
+                                        glm::u32vec3(2, 0, 3) };
+    mesh_.update(verts, faces);
+
     GLenum error = glGetError();
     if(error != GL_NO_ERROR) {
         cerr << "Error initializing scene!" << endl;
@@ -39,12 +41,5 @@ void Scene::update()
 void Scene::render()
 {
     pg_.bind();
-    glBindVertexArray(vao_);
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)0);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glDisableVertexAttribArray(0);
-    glBindVertexArray(0);
+    mesh_.render();
 }

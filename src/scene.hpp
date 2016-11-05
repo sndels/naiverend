@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "basic_program.hpp"
+#include "mesh.hpp"
 
 class Scene
 {
@@ -15,8 +16,7 @@ public:
 
 private:
     BasicProgram pg_;
-    uint32_t vao_;
-    uint32_t vbo_;
+    Mesh mesh_;
 
 };
 

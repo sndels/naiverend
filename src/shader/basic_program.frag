@@ -1,8 +1,10 @@
 #version 410
 
-out vec4 oFragColor;
+in vec4 color0;
+
+out vec4 fragColor;
 
 void main()
 {
-    oFragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    fragColor = color0;
 }

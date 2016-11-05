@@ -64,6 +64,7 @@ int main(void)
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+
     GLenum error = glGetError();
     if(error != GL_NO_ERROR) {
         cerr << "GLError opening glfw context!" << endl;
@@ -82,6 +83,8 @@ int main(void)
     // Init GL settings
     glViewport(0, 0, XRES, YRES);
     glClearColor(0.f, 0.f, 0.f, 1.f);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
 
     error = glGetError();
     if(error != GL_NO_ERROR) {

@@ -23,6 +23,7 @@ set(SOURCES
     src/basic_program.cpp
     src/gl_core_4_1.c
     src/main.cpp
+    src/mesh.cpp
     src/scene.cpp
     src/shader_program.cpp
 )
@@ -31,12 +32,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(HEADERS
         src/basic_program.hpp
         src/gl_core_4_1.h
+        src/mesh.hpp
         src/scene.hpp
         src/shader_program.hpp
-    )
-    set(SHADERS
-        src/shader/basic_program.frag
-        src/shader/basic_program.vert
     )
     # Override debugger working directory
     write_file("${PROJECT_NAME}.vcxproj.user"
@@ -76,7 +74,8 @@ else()
         target_link_libraries(${EXECUTABLE_NAME} ${GLFW_LIBRARIES})
     endif()
 endif()
+
 # Copy shaders to build directory
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/src/shader $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader)
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                   ${CMAKE_SOURCE_DIR}/src/shader $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader)
