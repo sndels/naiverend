@@ -21,6 +21,7 @@ set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 set(SOURCES
     src/basic_program.cpp
+    src/camera.cpp
     src/gl_core_4_1.c
     src/main.cpp
     src/mesh.cpp
@@ -32,7 +33,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     # Add all source files to VS-project
     set(HEADERS
         src/basic_program.hpp
+        src/camera.hpp
         src/gl_core_4_1.h
+        src/math_types.hpp
         src/mesh_parser.hpp
         src/scene.hpp
         src/shader_program.hpp

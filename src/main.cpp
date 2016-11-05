@@ -98,7 +98,7 @@ int main(void)
 
     cout << glGetString(GL_VERSION) << endl;
 
-    Scene scene;
+    Scene scene(static_cast<float>(XRES), static_cast<float>(YRES));
     if (!scene.init()) exit(EXIT_FAILURE);
     // Run the main loop
     while (!glfwWindowShouldClose(windowPtr)) {
