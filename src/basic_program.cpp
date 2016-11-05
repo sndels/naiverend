@@ -43,7 +43,18 @@ bool BasicProgram::loadProgram() {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    mvpLoc_ = getUniformLocation("uMVP");
+    if (mvpLoc_ == -1) {
+        cerr << "uMVP is not a valid uniform!" << endl;
+        return false;
+    }
+
     return true;
+}
+
+void BasicProgram::updateMVP(const glm::mat4& mvp)
+{
+    glUniformMatrix4fv(mvpLoc_, 1, GL_FALSE, glm::value_ptr(mvp));
 }
 
 int32_t BasicProgram::getUniformLocation(const char* uniformName) const {

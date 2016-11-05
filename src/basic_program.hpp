@@ -12,9 +12,12 @@ public:
     ~BasicProgram() {;}
 
     bool loadProgram();
-    int32_t getUniformLocation(const char* uniformName) const;
+    void updateMVP(const glm::mat4& mvp);
 
 private:
+    int32_t getUniformLocation(const char* uniformName) const;
+
+    int32_t mvpLoc_;
 
 };
 

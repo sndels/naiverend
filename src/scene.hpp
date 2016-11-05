@@ -18,6 +18,9 @@ private:
     BasicProgram pg_;
     Mesh mesh_;
 
+    glm::vec3 meshPos3f_;
+    glm::vec3 meshScale3f_;
+
 };
 
 #endif
