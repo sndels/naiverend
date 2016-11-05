@@ -9,9 +9,14 @@ using glm::vec3;
 Camera::Camera() :
     worldPos3f(0.f, 0.f, -3.f),
     orientationM3f_(1.f),
+    projM4f_(1.f),
     viewM4f_(1.f)
 {
     ;
+}
+
+void Camera::rotateTrackball(const glm::vec2& startPos, const glm::vec2& lastPos)
+{
 }
 
 void Camera::setProj(const float& xres, const float& yres, const float& yFov, const float& zN, const float& zF)

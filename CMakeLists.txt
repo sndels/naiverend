@@ -23,6 +23,7 @@ set(SOURCES
     src/basic_program.cpp
     src/camera.cpp
     src/gl_core_4_1.c
+    src/input_handler.cpp
     src/main.cpp
     src/mesh.cpp
     src/mesh_parser.cpp
@@ -35,6 +36,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         src/basic_program.hpp
         src/camera.hpp
         src/gl_core_4_1.h
+        src/input_handler.hpp
         src/math_types.hpp
         src/mesh_parser.hpp
         src/scene.hpp

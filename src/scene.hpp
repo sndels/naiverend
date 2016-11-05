@@ -1,6 +1,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "gl_core_4_1.h"
 #include "basic_program.hpp"
 #include "camera.hpp"
 #include "mesh.hpp"

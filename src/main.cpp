@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "input_handler.hpp"
 #include "scene.hpp"
 
 using std::cout;
@@ -20,11 +21,6 @@ namespace {
 static void errorCallback(int error, const char* description)
 {
     cerr << description << endl;
-}
-
-static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 int main(void)
@@ -76,7 +72,9 @@ int main(void)
     }
 
     // Set input callback
-    glfwSetKeyCallback(windowPtr, keyCallback);
+    glfwSetKeyCallback(windowPtr, InputHandler::keyCallback);
+    glfwSetCursorPosCallback(windowPtr, InputHandler::cursorPosCallback);
+    glfwSetMouseButtonCallback(windowPtr, InputHandler::mouseButtonCallback);
 	// Set vsync on
 	glfwSwapInterval(1);	
 
@@ -104,6 +102,7 @@ int main(void)
     while (!glfwWindowShouldClose(windowPtr)) {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
+        scene.update();
         scene.render();
         glfwSwapBuffers(windowPtr);
     }

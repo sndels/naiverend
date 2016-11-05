@@ -4,8 +4,10 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <vector>
+#include "input_handler.hpp"
 #include "mesh_parser.hpp"
 
+using glm::vec2;
 using glm::vec3;
 using std::cerr;
 using std::cin;
@@ -41,9 +43,16 @@ bool Scene::init()
     meshScale3f_ = vec3(1.f, 1.f, 1.f);
     return true;
 }
+
 void Scene::update()
 {
-    ;
+    InputHandler& ih = InputHandler::getIH();
+    MouseState ms = ih.getMouseState();
+    if (ms.state == LEFT_DOWN) {
+        std::cout << "drag " << ms.curPos2f.x << ',' << ms.curPos2f.y << endl;
+    } else if (ms.state == HOVERING) {
+        std::cout << "hover " << ms.curPos2f.x << ',' << ms.curPos2f.y << endl;
+    }
 }
 
 void Scene::render()
