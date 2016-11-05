@@ -1,6 +1,6 @@
-
-<!-- saved from url=(0060)http://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;"># OBJ file format with ext .obj
+# Downloaded from https://graphics.stanford.edu/~mdfisher/Data/Meshes/bunny.obj
+# Additional info at http://graphics.stanford.edu/data/3Dscanrep/
+# OBJ file format with ext .obj
 # vertex count = 2503
 # face count = 4968
 v -3.4101800e-003 1.3031957e-001 2.1754370e-002
@@ -7474,4 +7474,3 @@ f 1493 1487 2503
 f 1487 1318 2503
 f 1318 1320 2503
 f 1320 2443 2503
-</pre></body><style type="text/css">embed[type*="application/x-shockwave-flash"],embed[src*=".swf"],object[type*="application/x-shockwave-flash"],object[codetype*="application/x-shockwave-flash"],object[src*=".swf"],object[codebase*="swflash.cab"],object[classid*="D27CDB6E-AE6D-11cf-96B8-444553540000"],object[classid*="d27cdb6e-ae6d-11cf-96b8-444553540000"],object[classid*="D27CDB6E-AE6D-11cf-96B8-444553540000"]{	display: none !important;}</style></html>
