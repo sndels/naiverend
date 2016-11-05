@@ -24,6 +24,7 @@ set(SOURCES
     src/gl_core_4_1.c
     src/main.cpp
     src/mesh.cpp
+    src/mesh_parser.cpp
     src/scene.cpp
     src/shader_program.cpp
 )
@@ -32,7 +33,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(HEADERS
         src/basic_program.hpp
         src/gl_core_4_1.h
-        src/mesh.hpp
+        src/mesh_parser.hpp
         src/scene.hpp
         src/shader_program.hpp
     )
@@ -79,3 +80,7 @@ endif()
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${CMAKE_SOURCE_DIR}/src/shader $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader)
+# Copy resources to build directory
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                   ${CMAKE_SOURCE_DIR}/res $<TARGET_FILE_DIR:${PROJECT_NAME}>/res)
