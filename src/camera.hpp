@@ -9,7 +9,7 @@ public:
     Camera();
     ~Camera() {;}
 
-    void rotateTrackball(const glm::vec2& startPos, const glm::vec2& lastPos);
+    void rotateTrackball(const glm::vec2& startPos, const glm::vec2& curPos);
     // Symmetric perspective projection, takes yFov as degrees
     void setProj(const float& xres, const float& yres, const float& yFov, const float& zN, const float& zF);
     // Eye is camera's world position, target the point in world to look at, up is global up
@@ -17,10 +17,10 @@ public:
     glm::mat4 getVP() const;
 
 private:
-    glm::vec3 worldPos3f;
-    glm::mat3 orientationM3f_;
+    glm::vec2 viewDim2f_;
+    glm::mat4 translationM4f_;
+    glm::mat4 orientationM4f_;
     glm::mat4 projM4f_;
-    glm::mat4 viewM4f_;
 
 };
 

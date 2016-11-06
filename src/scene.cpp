@@ -48,11 +48,7 @@ void Scene::update()
 {
     InputHandler& ih = InputHandler::getIH();
     MouseState ms = ih.getMouseState();
-    if (ms.state == LEFT_DOWN) {
-        std::cout << "drag " << ms.curPos2f.x << ',' << ms.curPos2f.y << endl;
-    } else if (ms.state == HOVERING) {
-        std::cout << "hover " << ms.curPos2f.x << ',' << ms.curPos2f.y << endl;
-    }
+    if (ms.state == LEFT_DOWN) cam_.rotateTrackball(ms.clickPos2f, ms.curPos2f);
 }
 
 void Scene::render()

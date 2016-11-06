@@ -19,7 +19,7 @@ struct MouseState
 
 class InputHandler
 {
-public: 
+public:
     static InputHandler& getIH();
     InputHandler(const InputHandler&) = delete;
     void operator=(const InputHandler&) = delete;

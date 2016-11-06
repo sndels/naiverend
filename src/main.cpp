@@ -75,8 +75,8 @@ int main(void)
     glfwSetKeyCallback(windowPtr, InputHandler::keyCallback);
     glfwSetCursorPosCallback(windowPtr, InputHandler::cursorPosCallback);
     glfwSetMouseButtonCallback(windowPtr, InputHandler::mouseButtonCallback);
-	// Set vsync on
-	glfwSwapInterval(1);	
+    // Set vsync on
+    glfwSwapInterval(1);
 
     // Init GL settings
     glViewport(0, 0, XRES, YRES);
