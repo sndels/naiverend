@@ -38,13 +38,20 @@ void parseOBJ(const std::string& obj, Mesh& mesh)
         }
         else if (lineType == "f") {
             vec3u f;
-            in >> f.x;
-            in >> f.y;
             in >> f.z;
+            in >> f.y;
+            in >> f.x;
             f -= vec3u(1u,1u,1u);
             faces.push_back(f);
         }
     }
+    for (auto& f : faces) {
+        vec3 n = cross(verts[f[2]].pos - verts[f[0]].pos, verts[f[1]].pos - verts[f[0]].pos);
+        verts[f[0]].normal += n;
+        verts[f[1]].normal += n;
+        verts[f[2]].normal += n;
+    }
+    for (auto& v : verts) v.normal = normalize(v.normal);
 
     mesh.update(verts, faces);
 }

@@ -44,10 +44,10 @@ bool BasicProgram::loadProgram() {
     glDeleteShader(fragmentShader);
 
     mvpLoc_ = getUniformLocation("uMVP");
-    if (mvpLoc_ == -1) {
-        cerr << "uMVP is not a valid uniform!" << endl;
-        return false;
-    }
+    if (mvpLoc_ == -1) return false;
+
+    nToEyeLoc_ = getUniformLocation("uNormalToEye");
+    if (nToEyeLoc_ == -1) return false;
 
     return true;
 }
@@ -55,6 +55,7 @@ bool BasicProgram::loadProgram() {
 void BasicProgram::updateMVP(const glm::mat4& mvp)
 {
     glUniformMatrix4fv(mvpLoc_, 1, GL_FALSE, glm::value_ptr(mvp));
+    glUniformMatrix4fv(nToEyeLoc_, 1, GL_FALSE, glm::value_ptr(transpose(inverse(mvp))));
 }
 
 int32_t BasicProgram::getUniformLocation(const char* uniformName) const {

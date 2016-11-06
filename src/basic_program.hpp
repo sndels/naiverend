@@ -18,6 +18,7 @@ private:
     int32_t getUniformLocation(const char* uniformName) const;
 
     int32_t mvpLoc_;
+    int32_t nToEyeLoc_;
 
 };
 
