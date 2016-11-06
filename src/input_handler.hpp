@@ -15,6 +15,7 @@ struct MouseState
     glm::vec2 clickPos2f;
     glm::vec2 curPos2f;
     MButtonState state;
+    bool released;
 };
 
 class InputHandler
@@ -29,6 +30,7 @@ public:
     static void keyCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
 
     const MouseState& getMouseState() const;
+    void resetMouseReleased();
 
 private:
     InputHandler() {}

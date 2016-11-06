@@ -23,8 +23,11 @@ void InputHandler::mouseButtonCallback(GLFWwindow* w, int32_t button, int32_t ac
         if (action == GLFW_PRESS) {
             InputHandler::mouseState_.clickPos2f = InputHandler::mouseState_.curPos2f;
             InputHandler::mouseState_.state = LEFT_DOWN;
+            InputHandler::mouseState_.released = false;
         } else {
             InputHandler::mouseState_.state = HOVERING;
+            InputHandler::mouseState_.released = true;
+
         }
     }
 }
@@ -37,4 +40,9 @@ void InputHandler::keyCallback(GLFWwindow* window, int32_t key, int32_t scancode
 const MouseState& InputHandler::getMouseState() const
 {
     return mouseState_;
+}
+
+void InputHandler::resetMouseReleased()
+{
+    mouseState_.released = false;
 }

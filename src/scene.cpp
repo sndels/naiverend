@@ -49,6 +49,12 @@ void Scene::update()
     InputHandler& ih = InputHandler::getIH();
     MouseState ms = ih.getMouseState();
     if (ms.state == LEFT_DOWN) cam_.rotateTrackball(ms.clickPos2f, ms.curPos2f);
+    else if (ms.state == HOVERING) {
+        if (ms.released) {
+            cam_.releaseTrackball();
+            ih.resetMouseReleased();
+        }
+    }
 }
 
 void Scene::render()

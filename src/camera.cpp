@@ -24,18 +24,18 @@ namespace {
             r = dim.x;
             yo = dim.y - dim.x;
         }
-        vec3 v;
-        v.x = (2.0*p.x - xo - r) / r;
-        v.y = (yo + r - 2.0F*p.y) / r;
-        float d = sqrt(v.x*v.x + v.y*v.y);
-        v.z = cos((M_PI/2.0) * ((d < 1.0) ? d : 1.0));
-        float a = 1.0 / sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-        return a*v;
+        vec3 v(0.f, 0.f, 0.f);
+        v.x = (2.f*p.x - xo - r) / r;
+        v.y = (yo + r - 2.f*p.y) / r;
+        float d = length(v);
+        v.z = cos((PI_F/2.f) * ((d < 1.f) ? d : 1.f));
+        return normalize(v);
     }
 
 }
 
 Camera::Camera() :
+    viewDim2f_(0.f, 0.f),
     translationM4f_(1.f),
     orientationM4f_(1.f),
     projM4f_(1.f)
@@ -52,9 +52,12 @@ void Camera::rotateTrackball(const glm::vec2& startPos, const glm::vec2& curPos)
         vec3 axis = normalize(cross(cv, sv));
         float angle = acos(dot(cv, sv));
         orientationM4f_ = glm::rotate(angle, axis) * startOrientation;
-    } else {
-        startOrientation = orientationM4f_;
     }
+}
+
+void Camera::releaseTrackball()
+{
+    startOrientation = orientationM4f_;
 }
 
 void Camera::setProj(const float& xres, const float& yres, const float& yFov, const float& zN, const float& zF)
