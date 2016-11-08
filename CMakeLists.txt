@@ -38,6 +38,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
         src/gl_core_4_1.h
         src/input_handler.hpp
         src/math_types.hpp
+        src/mc_tables.hpp
         src/mesh_parser.hpp
         src/scene.hpp
         src/shader_program.hpp
