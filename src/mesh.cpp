@@ -42,8 +42,8 @@ void Mesh::update(const std::vector<Vertex>& verts, const std::vector<glm::u32ve
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-    verts_ = verts;
-    faces_ = faces;
+    verts_ = std::move(verts);
+    faces_ = std::move(faces);
 }
 
 void Mesh::render() const

@@ -1,3 +1,6 @@
+// parseLayerData is based on Paul Bourke's implementation found at
+// http://paulbourke.net/geometry/polygonise/
+
 #include "mesh_parser.hpp"
 
 #include <glm/glm.hpp>
@@ -21,23 +24,28 @@ namespace {
         int16_t value;
     };
 
+    // Generates positions from [-1,-1] to [1,1] with value 0
     std::vector<IsoVert> genEmptyLayer(const uint32_t& resX, const uint32_t& resY,
-                                       const uint32_t& aspX, const uint32_t& aspY, const float& posZ)
+                                       const uint32_t& aspX, const uint32_t& aspY,
+                                       const float& posZ)
     {
         std::vector<IsoVert> layerVerts;
         float scaleX = 2.f / resX;
         float scaleY = 2.f / resY;
         for (int j = 0; j < resY; ++j) {
             for(int i = 0; i < resX; ++i) {
-                layerVerts.push_back({vec3((((i % resX)) * scaleX - 1.f) / aspX, -(j * scaleY - 1.f) / aspY, posZ),
-                                      0});
+                layerVerts.push_back({vec3((((i % resX)) * scaleX - 1.f) / aspX,
+                                           -(j * scaleY - 1.f) / aspY,
+                                           posZ), 0});
             }
         }
         return layerVerts;
     }
 
-    std::vector<IsoVert> readVolumeLayer(std::string filename, const uint32_t& resX, const uint32_t& aspX,
-                                         const uint32_t& resY, const uint32_t& aspY, const float& posZ)
+    // Reads file with set parameters and ties read values to positions from [-1,-1] to [1,1]
+    // Currently takes mac-ordered files
+    std::vector<IsoVert> readVolumeLayer(std::string filename, const uint32_t& resX, const uint32_t& resY,
+                                         const uint32_t& aspX, const uint32_t& aspY, const float& posZ)
     {
         std::ifstream in(filename, std::ios::binary);
 
@@ -56,8 +64,8 @@ namespace {
             uint8_t* valbytes = reinterpret_cast<uint8_t*>(&val);
             std::reverse(valbytes, valbytes + sizeof(val));
             layerVerts.push_back({vec3((((counter % resX)) * scaleX - 1.f) / aspX,
-                                  -(counter / resX * scaleY - 1.f) / aspY, posZ),
-                                  val});
+                                       -(counter / resX * scaleY - 1.f) / aspY,
+                                       posZ), val});
             ++counter;
         }
         if (counter != resX * resY) {
@@ -68,6 +76,7 @@ namespace {
         return layerVerts;
     }
 
+    // Lerps intersection position on cube edge between v1, v2
     int32_t lerpIntersection(const IsoVert& v1, const IsoVert& v2, const int& treshold, std::vector<Vertex>& verts)
     {
         verts.push_back({v1.pos + float(treshold - v1.value) * (v2.pos - v1.pos) / float(v2.value - v1.value),
@@ -75,6 +84,7 @@ namespace {
         return verts.size() - 1;
     }
 
+    // Pushes triangles in the given cube to verts and faces
     void parseVolumeCube(std::vector<IsoVert>& corners, const uint32_t& x, const uint32_t& y, const int& treshold,
                          std::vector<Vertex>& verts, std::vector<u32vec3>& faces)
     {
@@ -89,8 +99,7 @@ namespace {
         if (corners[6].value >= treshold) cubeI |= 64;
         if (corners[7].value >= treshold) cubeI |= 128;
 
-        if (cubeI == 0)
-            return;
+        if (cubeI == 0) return;
 
         // Lerp edge intersections
         int edges = EDGE_TABLE[cubeI];
@@ -205,7 +214,7 @@ void parseOBJ(const std::string& obj, Mesh& mesh)
     mesh.update(verts, faces);
 }
 
-void parseLayerFile(const std::string& headerFile, Mesh& mesh)
+void parseLayerData(const std::string& headerFile, Mesh& mesh)
 {
 	int pathEnd = headerFile.find_last_of("/\\");
 	std::string path = headerFile.substr(0, pathEnd + 1);
@@ -247,25 +256,26 @@ void parseLayerFile(const std::string& headerFile, Mesh& mesh)
     if (objName.empty() || layerFile.empty() || layers == 0 || resX == 0 || resY == 0 || aspX == 0 || aspY == 0 || aspZ == 0)
         return;
 
-    // Parse cubes
+    // Init an empty layer and vectors for precalculated data
+    std::vector<IsoVert> layer1 = genEmptyLayer(resX, resY, aspX, aspY, -1.f / aspZ);
     lastLayer = std::vector<std::vector<std::vector<int32_t> > >(resY, std::vector<std::vector<int32_t> >(resX, std::vector<int32_t>(4, -1)));
     lastRow = std::vector<std::vector<int32_t> >(resX, std::vector<int32_t>(4, -1));
-    std::vector<IsoVert> layer1 = genEmptyLayer(resX, resY, aspX, aspY, -1.f / aspZ);
-    if (layer1.empty()) {
-        std::cout << "tyhyjä" << std::endl;
-        return;
-    }
+
+    // Parse cubes
     float scaleZ = 2.f / (layers + 2);
     std::vector<Vertex> verts;
     std::vector<u32vec3> faces;
     for (uint32_t l = 1; l <= layers + 1; ++l) {
         std::vector<IsoVert> layer2;
         if (l <= layers)
-             layer2 = readVolumeLayer(path + layerFile + std::to_string(l), resX, aspX, resY, aspY, (l * scaleZ - 1.f) / aspZ);
+            layer2 = readVolumeLayer(path + layerFile + std::to_string(l), resX, resY,
+                                     aspX, aspY, (l * scaleZ - 1.f) / aspZ);
         else
             layer2 = genEmptyLayer(resX, resY, aspX, aspY, 1.f / aspZ);
-        if (layer2.empty())
-            return;
+
+        if (layer2.empty()) return;
+
+        // Go through the layer
         for (uint32_t j = 0; j < resY - 1; ++j) {
             uint32_t offset = j * resX;
             for (uint32_t i = 0; i < resX - 1; ++i) {
@@ -284,8 +294,7 @@ void parseLayerFile(const std::string& headerFile, Mesh& mesh)
         layer1 = layer2;
     }
 
-    for (auto& v : verts)
-        v.normal = normalize(v.normal);
+    for (auto& v : verts) v.normal = normalize(v.normal);
 
     lastLayer.clear();
     lastRow.clear();

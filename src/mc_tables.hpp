@@ -1,6 +1,7 @@
 #ifndef MCTABLES_H
 #define MCTABLES_H
 
+// From http://paulbourke.net/geometry/polygonise/
 
 static const int EDGE_TABLE[256] = {
     0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,

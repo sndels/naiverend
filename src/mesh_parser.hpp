@@ -5,6 +5,6 @@
 #include "mesh.hpp"
 
 void parseOBJ(const std::string& obj, Mesh& mesh);
-void parseLayerFile(const std::string& headerFile, Mesh& mesh);
+void parseLayerData(const std::string& headerFile, Mesh& mesh);
 
 #endif
