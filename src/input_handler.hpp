@@ -20,6 +20,15 @@ struct MouseState
     float scrollY;
 };
 
+struct KeyboardState
+{
+    bool up;
+    bool down;
+    bool left;
+    bool right;
+    bool shift;
+};
+
 class InputHandler
 {
 public:
@@ -33,13 +42,14 @@ public:
     static void keyCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
 
     const MouseState& getMouseState() const;
-    void resetMouseReleased();
-    void resetScrolling();
+    const KeyboardState& getKeyboardState() const;
+    void reset();
 
 private:
     InputHandler() {}
 
     static MouseState mouseState_;
+    static KeyboardState keyboardState_;
 };
 
 #endif

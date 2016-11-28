@@ -7,8 +7,8 @@
 #include "input_handler.hpp"
 #include "mesh_parser.hpp"
 
-using glm::vec2;
 using glm::vec3;
+using glm::mat4;
 using std::cerr;
 using std::cin;
 using std::endl;
@@ -47,29 +47,46 @@ bool Scene::init()
 void Scene::update()
 {
     InputHandler& ih = InputHandler::getIH();
-    MouseState ms = ih.getMouseState();
+
+    // Cam control
+    const MouseState ms = ih.getMouseState();
     if (ms.state == LEFT_DOWN) cam_.rotateTrackball(ms.clickPos2f, ms.curPos2f);
     else if (ms.state == HOVERING) {
         if (ms.released) {
             cam_.releaseTrackball();
-            ih.resetMouseReleased();
         }
     }
     cam_.movePos(vec3(0.f, 0.f, ms.scrollY / 4.f));
-    ih.resetScrolling();
+
+    // Model control
+    const KeyboardState ks = ih.getKeyboardState();
+    vec3 meshOffset(0.f, 0.f, 0.f);
+    if (ks.shift) {
+        if (ks.up) meshOffset.z += 1.f;
+        if (ks.down) meshOffset.z -= 1.f;
+    } else {
+        if (ks.up) meshOffset.y += 1.f;
+        if (ks.down) meshOffset.y -= 1.f;
+    }
+    if (ks.left) meshOffset.x -= 1.f;
+    if (ks.right) meshOffset.x += 1.f;
+
+    if (length(meshOffset) > 0.f) meshPos3f_ += 0.05f * normalize(meshOffset);
+
+    ih.reset();
 }
 
 void Scene::render()
 {
     pg_.bind();
-    glm::mat4 translate(         1.f,          0.f,          0.f, 0.f,
-                                 0.f,          1.f,          0.f, 0.f,
-                                 0.f,          0.f,          1.f, 0.f,
-                        meshPos3f_.x, meshPos3f_.y, meshPos3f_.z, 1.f );
-    glm::mat4 scale(meshScale3f_.x,            0.f,            0.f, 0.f,
-                               0.f, meshScale3f_.y,            0.f, 0.f,
-                               0.f,            0.f, meshScale3f_.z, 0.f,
-                               0.f,            0.f,            0.f, 1.f );
+    mat4 translate(         1.f,          0.f,          0.f, 0.f,
+                            0.f,          1.f,          0.f, 0.f,
+                            0.f,          0.f,          1.f, 0.f,
+                   meshPos3f_.x, meshPos3f_.y, meshPos3f_.z, 1.f );
+    mat4 scale(meshScale3f_.x,            0.f,            0.f, 0.f,
+                          0.f, meshScale3f_.y,            0.f, 0.f,
+                          0.f,            0.f, meshScale3f_.z, 0.f,
+                          0.f,            0.f,            0.f, 1.f );
     pg_.updateMVP(cam_.getVP() * translate * scale);
     mesh_.render();
 }
