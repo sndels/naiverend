@@ -14,8 +14,7 @@ using std::cin;
 using std::endl;
 
 Scene::Scene(const float& xres, const float& yres) :
-    xres1f_(xres),
-    yres1f_(yres),
+    res2f_(xres, yres),
     meshPos3f_(0.f, 0.f, 0.f),
     meshScale3f_(2.f, 2.f, 2.f)
 {
@@ -36,7 +35,7 @@ bool Scene::init()
         return false;
     }
 
-    cam_.setProj(xres1f_, yres1f_, 90.f, 1.f, 10.f);
+    cam_.setProj(res2f_.x, res2f_.y, 90.f, 1.f, 10.f);
     cam_.setView(vec3(0.f, 0.f, -2.f), vec3(0.f, 0.f, 0.f));
 
     meshPos3f_ = vec3(0.f, 0.f, 0.f);
@@ -50,12 +49,7 @@ void Scene::update()
 
     // Cam control
     const MouseState ms = ih.getMouseState();
-    if (ms.state == LEFT_DOWN) cam_.rotateTrackball(ms.clickPos2f, ms.curPos2f);
-    else if (ms.state == HOVERING) {
-        if (ms.released) {
-            cam_.releaseTrackball();
-        }
-    }
+    if (ms.state == LEFT_DOWN) cam_.rotateTrackball(ms.lastPos2f, ms.curPos2f);
     cam_.movePos(vec3(0.f, 0.f, ms.scrollY / 4.f));
 
     // Model control

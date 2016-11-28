@@ -11,8 +11,6 @@ using glm::vec3;
 
 namespace {
 
-    mat4 startOrientation = mat4(1.f);
-
     vec3 screenToSphere(const vec2& p, const vec2& dim)
     {
         float r = 0.f;
@@ -44,21 +42,17 @@ Camera::Camera() :
     ;
 }
 
-void Camera::rotateTrackball(const glm::vec2& startPos, const glm::vec2& curPos)
+void Camera::rotateTrackball(const glm::vec2& lastPos, const glm::vec2& curPos)
 {
-    vec3 cv = screenToSphere(curPos, viewDim2f_);
-    vec3 sv = screenToSphere(startPos, viewDim2f_);
+    vec2 offset = 0.5f * viewDim2f_ - lastPos;
+    vec3 cv = screenToSphere(curPos + offset, viewDim2f_);
+    vec3 sv = screenToSphere(lastPos + offset, viewDim2f_);
     vec3 dv = cv - sv;
     if (dv.x || dv.y || dv.z) {
         vec3 axis = normalize(cross(cv, sv));
         float angle = acos(dot(cv, sv));
-        orientationM4f_ = glm::rotate(angle, axis) * startOrientation;
+        orientationM4f_ = glm::rotate(angle, axis) * orientationM4f_;
     }
-}
-
-void Camera::releaseTrackball()
-{
-    startOrientation = orientationM4f_;
 }
 
 void Camera::setProj(const float& xres, const float& yres, const float& yFov, const float& zN, const float& zF)
@@ -85,7 +79,6 @@ void Camera::setView(const glm::vec3& eye, const glm::vec3& target, const glm::v
                            r.y, u.y, f.y, 0.f,
                            r.z, u.z, f.z, 0.f,
                            0.f, 0.f, 0.f, 1.f );
-    startOrientation = orientationM4f_;
 }
 
 void Camera::movePos(const glm::vec3& offset)

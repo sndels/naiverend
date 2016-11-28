@@ -12,10 +12,9 @@ enum MButtonState
 
 struct MouseState
 {
-    glm::vec2 clickPos2f;
+    glm::vec2 lastPos2f;
     glm::vec2 curPos2f;
     MButtonState state;
-    bool released;
     float scrollX;
     float scrollY;
 };

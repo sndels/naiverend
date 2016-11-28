@@ -20,8 +20,7 @@ private:
     Camera cam_;
     Mesh mesh_;
 
-    float xres1f_;
-    float yres1f_;
+    glm::vec2 res2f_;
     glm::vec3 meshPos3f_;
     glm::vec3 meshScale3f_;
 

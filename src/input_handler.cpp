@@ -2,7 +2,7 @@
 
 using glm::vec2;
 
-MouseState InputHandler::mouseState_ = MouseState({vec2(0.f, 0.f), vec2(0.f, 0.f), HOVERING});
+MouseState InputHandler::mouseState_ = MouseState({vec2(0.f, 0.f), vec2(0.f, 0.f), HOVERING, 0.f, 0.f});
 KeyboardState InputHandler::keyboardState_ = KeyboardState({false,false,false,false,false});
 
 InputHandler& InputHandler::getIH()
@@ -22,13 +22,9 @@ void InputHandler::mouseButtonCallback(GLFWwindow* w, int32_t button, int32_t ac
 {
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
-            InputHandler::mouseState_.clickPos2f = InputHandler::mouseState_.curPos2f;
             InputHandler::mouseState_.state = LEFT_DOWN;
-            InputHandler::mouseState_.released = false;
         } else {
             InputHandler::mouseState_.state = HOVERING;
-            InputHandler::mouseState_.released = true;
-
         }
     }
 }
@@ -74,7 +70,7 @@ const KeyboardState& InputHandler::getKeyboardState() const
 }
 
 void InputHandler::reset() {
+    mouseState_.lastPos2f = mouseState_.curPos2f;
     mouseState_.scrollX = 0.f;
     mouseState_.scrollY = 0.f;
-    mouseState_.released = false;
 }

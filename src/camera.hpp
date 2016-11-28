@@ -9,7 +9,7 @@ public:
     Camera();
     ~Camera() {;}
 
-    void rotateTrackball(const glm::vec2& startPos, const glm::vec2& curPos);
+    void rotateTrackball(const glm::vec2& lasPos, const glm::vec2& curPos);
     void releaseTrackball();
     // Symmetric perspective projection, takes yFov as degrees
     void setProj(const float& xres, const float& yres, const float& yFov, const float& zN, const float& zF);
