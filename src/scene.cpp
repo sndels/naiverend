@@ -17,7 +17,7 @@ Scene::Scene(const float& xres, const float& yres) :
     xres1f_(xres),
     yres1f_(yres),
     meshPos3f_(0.f, 0.f, 0.f),
-    meshScale3f_(1.f, 1.f, 1.f)
+    meshScale3f_(2.f, 2.f, 2.f)
 {
     ;
 }
@@ -39,7 +39,7 @@ bool Scene::init()
     cam_.setProj(xres1f_, yres1f_, 90.f, 1.f, 10.f);
     cam_.setView(vec3(0.f, 0.f, -2.f), vec3(0.f, 0.f, 0.f));
 
-    meshPos3f_ = vec3(0.125f, -1.f, 0.f);
+    meshPos3f_ = vec3(0.f, 0.f, 0.f);
     meshScale3f_ = vec3(1.f, 1.f, 1.f);
     return true;
 }
@@ -55,6 +55,8 @@ void Scene::update()
             ih.resetMouseReleased();
         }
     }
+    cam_.movePos(vec3(0.f, 0.f, ms.scrollY / 4.f));
+    ih.resetScrolling();
 }
 
 void Scene::render()

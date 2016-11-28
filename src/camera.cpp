@@ -1,6 +1,7 @@
 #include "camera.hpp"
 
 #include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_access.hpp>
 #include "math_types.hpp"
 
 using glm::mat3;
@@ -85,6 +86,21 @@ void Camera::setView(const glm::vec3& eye, const glm::vec3& target, const glm::v
                            r.z, u.z, f.z, 0.f,
                            0.f, 0.f, 0.f, 1.f );
     startOrientation = orientationM4f_;
+}
+
+void Camera::movePos(const glm::vec3& offset)
+{
+    translationM4f_[3][0] += offset.x;
+    translationM4f_[3][1] += offset.y;
+    translationM4f_[3][2] += offset.z;
+}
+
+void Camera::setPos(const glm::vec3& eye)
+{
+    translationM4f_ = mat4(    1.f,    0.f,    0.f, 0.f,
+                               0.f,    1.f,    0.f, 0.f,
+                               0.f,    0.f,    1.f, 0.f,
+                            -eye.x, -eye.y, -eye.z, 1.f );
 }
 
 glm::mat4 Camera::getVP() const

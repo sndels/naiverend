@@ -32,6 +32,11 @@ void InputHandler::mouseButtonCallback(GLFWwindow* w, int32_t button, int32_t ac
     }
 }
 
+void InputHandler::scrollCallback(GLFWwindow* w, double xoffset, double yoffset) {
+    mouseState_.scrollX = static_cast<float>(xoffset);
+    mouseState_.scrollY = static_cast<float>(yoffset);
+}
+
 void InputHandler::keyCallback(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
@@ -45,4 +50,9 @@ const MouseState& InputHandler::getMouseState() const
 void InputHandler::resetMouseReleased()
 {
     mouseState_.released = false;
+}
+
+void InputHandler::resetScrolling() {
+    mouseState_.scrollX = 0.f;
+    mouseState_.scrollY = 0.f;
 }

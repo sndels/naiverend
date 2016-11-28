@@ -75,6 +75,7 @@ int main(void)
     glfwSetKeyCallback(windowPtr, InputHandler::keyCallback);
     glfwSetCursorPosCallback(windowPtr, InputHandler::cursorPosCallback);
     glfwSetMouseButtonCallback(windowPtr, InputHandler::mouseButtonCallback);
+    glfwSetScrollCallback(windowPtr, InputHandler::scrollCallback);
     // Set vsync on
     glfwSwapInterval(1);
 
