@@ -20,7 +20,7 @@ bool BasicProgram::loadProgram() {
     uint32_t fragmentShader = loadShaderFromFile("shader/basic_program.frag",
                                                GL_FRAGMENT_SHADER);
     if (fragmentShader == 0) {
-        glDeleteShader(progID_);
+        glDeleteShader(vertexShader);
         glDeleteProgram(progID_);
         progID_ = 0;
         return false;

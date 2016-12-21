@@ -11,6 +11,7 @@
 
 using glm::vec3;
 using glm::u32vec3;
+using std::cerr;
 
 namespace {
 
@@ -50,7 +51,7 @@ namespace {
         std::ifstream in(filename, std::ios::binary);
 
         if (!in) {
-            std::cout << "Error reading layer with filename " << filename << std::endl;
+            cerr << "Error reading layer with filename " << filename << std::endl;
             return std::vector<IsoVert>();
         }
 
@@ -69,7 +70,7 @@ namespace {
             ++counter;
         }
         if (counter != resX * resY) {
-            std::cout << "Error reading layer with filename " << filename << std::endl;
+            cerr << "Error reading layer with filename " << filename << std::endl;
             return std::vector<IsoVert>();
         }
 
@@ -143,7 +144,7 @@ namespace {
             int32_t v0 = intersections[mFaces[i]];
             int32_t v1 = intersections[mFaces[i+2]];
             int32_t v2 = intersections[mFaces[i+1]];
-            vec3 normal = normalize(cross(verts[v1].pos - verts[v0].pos, verts[v2].pos - verts[v0].pos));
+            vec3 normal = normalize(cross(verts[v2].pos - verts[v0].pos, verts[v1].pos - verts[v0].pos));
             verts[v0].normal += normal;
             verts[v1].normal += normal;
             verts[v2].normal += normal;
