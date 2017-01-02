@@ -25,24 +25,28 @@ set(SOURCES
     src/gl_core_4_1.c
     src/input_handler.cpp
     src/main.cpp
-    src/mesh.cpp
-    src/mesh_parser.cpp
+    src/model.cpp
+    src/model_parser.cpp
     src/scene.cpp
     src/shader_program.cpp
 )
+set(HEADERS
+    src/basic_program.hpp
+    src/camera.hpp
+    src/gl_core_4_1.h
+    src/input_handler.hpp
+    src/math_types.hpp
+    src/mc_tables.hpp
+    src/model.hpp
+    src/model_parser.hpp
+    src/scene.hpp
+    src/shader_program.hpp
+)
+set(SHADERS
+    src/shader/basic_program.frag
+    src/shader/basic_program.vert
+)
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    # Add all source files to VS-project
-    set(HEADERS
-        src/basic_program.hpp
-        src/camera.hpp
-        src/gl_core_4_1.h
-        src/input_handler.hpp
-        src/math_types.hpp
-        src/mc_tables.hpp
-        src/mesh_parser.hpp
-        src/scene.hpp
-        src/shader_program.hpp
-    )
     # Override debugger working directory
     write_file("${PROJECT_NAME}.vcxproj.user"
         "<?xml version=\"1.0\" encoding=\"utf-8\"?>     \
@@ -64,7 +68,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
                        COMMAND ${CMAKE_COMMAND} -E copy_directory
                        ${CMAKE_SOURCE_DIR}/lib/win $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>)
 else()
-    add_executable(${EXECUTABLE_NAME} ${SOURCES})
+    add_executable(${EXECUTABLE_NAME} ${SOURCES} ${HEADERS} ${SHADERS})
     # Set correct compiler std
     target_compile_features(${EXECUTABLE_NAME} PRIVATE cxx_range_for)
     # Find OpenGL

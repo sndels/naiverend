@@ -1,5 +1,5 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef MODEL_H
+#define MODEL_H
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -8,13 +8,14 @@ struct Vertex
 {
    glm::vec3 pos;
    glm::vec3 normal;
+   glm::vec2 texture;
 };
 
-class Mesh
+class Model
 {
 public:
-    Mesh();
-    ~Mesh();
+    Model();
+    ~Model();
 
     void update(const std::vector<Vertex>& verts, const std::vector<glm::u32vec3>& faces);
     void render() const;

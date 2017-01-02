@@ -10,7 +10,7 @@ out vec4 color0;
 
 const float cShadingIntensity = 0.9;
 const vec3 cToLight = normalize(vec3(0.5, 0.7, -0.5));
-const vec3 cMeshColor = vec3(0.8, 0.8, 0.8);
+const vec3 cModelColor = vec3(0.8, 0.8, 0.8);
 
 void main()
 {
@@ -18,5 +18,5 @@ void main()
     float clampedCosine = clamp(dot(eyeNormal, cToLight), 0.0, 1.0);
     vec3 litColor = vec3(clampedCosine);
     gl_Position  = uMVP * vec4(pos0, 1.0);
-    color0 = vec4(mix(cMeshColor, litColor, cShadingIntensity), 1.0);
+    color0 = vec4(mix(cModelColor, litColor, cShadingIntensity), 1.0);
 }

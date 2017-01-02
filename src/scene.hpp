@@ -3,7 +3,7 @@
 
 #include "basic_program.hpp"
 #include "camera.hpp"
-#include "mesh.hpp"
+#include "model.hpp"
 
 class Scene
 {
@@ -18,11 +18,11 @@ public:
 private:
     BasicProgram pg_;
     Camera cam_;
-    Mesh mesh_;
+    Model model_;
 
     glm::vec2 res2f_;
-    glm::vec3 meshPos3f_;
-    glm::vec3 meshScale3f_;
+    glm::vec3 modelPos3f_;
+    glm::vec3 modelScale3f_;
 
 };
 

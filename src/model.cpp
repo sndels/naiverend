@@ -1,8 +1,8 @@
-#include "mesh.hpp"
+#include "model.hpp"
 
 #include "gl_core_4_1.h"
 
-Mesh::Mesh() :
+Model::Model() :
     vao_(0),
     ibo_(0),
     vbo_(0)
@@ -12,14 +12,14 @@ Mesh::Mesh() :
     glGenBuffers(1, &ibo_);
 }
 
-Mesh::~Mesh()
+Model::~Model()
 {
     glDeleteVertexArrays(1, &vao_);
     glDeleteBuffers(1, &vbo_);
     glDeleteBuffers(1, &ibo_);
 }
 
-void Mesh::update(const std::vector<Vertex>& verts, const std::vector<glm::u32vec3>& faces)
+void Model::update(const std::vector<Vertex>& verts, const std::vector<glm::u32vec3>& faces)
 {
     glBindVertexArray(vao_);
 
@@ -46,7 +46,7 @@ void Mesh::update(const std::vector<Vertex>& verts, const std::vector<glm::u32ve
     faces_ = std::move(faces);
 }
 
-void Mesh::render() const
+void Model::render() const
 {
     glBindVertexArray(vao_);
     glDrawElements(GL_TRIANGLES, faces_.size()*3, GL_UNSIGNED_INT, 0);

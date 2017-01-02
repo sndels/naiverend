@@ -1,7 +1,7 @@
 // parseLayerData is based on Paul Bourke's implementation found at
 // http://paulbourke.net/geometry/polygonise/
 
-#include "mesh_parser.hpp"
+#include "model_parser.hpp"
 
 #include <glm/glm.hpp>
 #include <fstream>
@@ -166,7 +166,7 @@ namespace {
     }
 }
 
-void parseOBJ(const std::string& obj, Mesh& mesh)
+void parseOBJ(const std::string& obj, Model& model)
 {
     std::ifstream in(obj);
     std::string lineType;
@@ -212,10 +212,10 @@ void parseOBJ(const std::string& obj, Mesh& mesh)
     }
     for (auto& v : verts) v.normal = normalize(v.normal);
 
-    mesh.update(verts, faces);
+    model.update(verts, faces);
 }
 
-void parseLayerData(const std::string& headerFile, Mesh& mesh)
+void parseLayerData(const std::string& headerFile, Model& model)
 {
 	int pathEnd = headerFile.find_last_of("/\\");
 	std::string path = headerFile.substr(0, pathEnd + 1);
@@ -300,5 +300,5 @@ void parseLayerData(const std::string& headerFile, Mesh& mesh)
     lastLayer.clear();
     lastRow.clear();
 
-    mesh.update(verts, faces);
+    model.update(verts, faces);
 }
