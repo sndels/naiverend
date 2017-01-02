@@ -10,6 +10,7 @@
 #include "mc_tables.hpp"
 
 using glm::vec3;
+using glm::vec2;
 using glm::u32vec3;
 using std::cerr;
 
@@ -173,6 +174,9 @@ void parseOBJ(const std::string& obj, Model& model)
     uint32_t vertCount = 0u;
     uint32_t faceCount = 0u;
     std::vector<Vertex> verts;
+    std::vector<vec3> positions;
+    std::vector<vec3> normals;
+    std::vector<vec2> texturepositions;
     std::vector<u32vec3> faces;
     while (in >> lineType) {
         if (lineType == "#") {
@@ -193,24 +197,49 @@ void parseOBJ(const std::string& obj, Model& model)
             in >> v.x;
             in >> v.y;
             in >> v.z;
-            verts.push_back(Vertex({v*10.f, vec3(0.0,0.0,0.0)}));
+            positions.push_back(v);
+        }
+        else if (lineType == "vn") {
+            vec3 n;
+            in >> n.x;
+            in >> n.y;
+            in >> n.z;
+            normals.push_back(n);
         }
         else if (lineType == "f") {
             u32vec3 f;
-            in >> f.z;
-            in >> f.y;
-            in >> f.x;
+            uint32_t nil;
+            in >> f[2];
+            while (in.peek() == '/'){
+                in.ignore();
+                in >> nil;
+            }
+            in >> f[1];
+            while (in.peek() == '/'){
+                in.ignore();
+                in >> nil;
+            }
+            in >> f[0];
+            while (in.peek() == '/'){
+                in.ignore();
+                in >> nil;
+            }
             f -= u32vec3(1u,1u,1u);
             faces.push_back(f);
         }
     }
-    for (auto& f : faces) {
-        vec3 n = cross(verts[f[2]].pos - verts[f[0]].pos, verts[f[1]].pos - verts[f[0]].pos);
-        verts[f[0]].normal += n;
-        verts[f[1]].normal += n;
-        verts[f[2]].normal += n;
+    if (normals.size() == 0) {
+        normals.resize(positions.size());
+        for (auto& f : faces) {
+            vec3 n = cross(positions[f[2]] - positions[f[0]], positions[f[1]] - positions[f[0]]);
+            normals[f[0]] += n;
+            normals[f[1]] += n;
+            normals[f[2]] += n;
+        }
+        for (auto& n : normals) n = normalize(n);
     }
-    for (auto& v : verts) v.normal = normalize(v.normal);
+
+    for (auto i = 0; i < positions.size(); i++)  verts.push_back({positions[i], normals[i]});
 
     model.update(verts, faces);
 }
