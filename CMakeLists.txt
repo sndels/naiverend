@@ -29,6 +29,7 @@ set(SOURCES
     src/model_parser.cpp
     src/scene.cpp
     src/shader_program.cpp
+    src/texture.cpp
 )
 set(HEADERS
     src/basic_program.hpp
@@ -41,6 +42,7 @@ set(HEADERS
     src/model_parser.hpp
     src/scene.hpp
     src/shader_program.hpp
+    src/texture.hpp
 )
 set(SHADERS
     src/shader/basic_program.frag

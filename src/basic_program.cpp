@@ -10,7 +10,7 @@ bool BasicProgram::loadProgram() {
     progID_ = glCreateProgram();
     //Load and attacth shaders
     uint32_t vertexShader = loadShaderFromFile("shader/basic_program.vert",
-                                             GL_VERTEX_SHADER);
+                                               GL_VERTEX_SHADER);
     if (vertexShader == 0) {
         glDeleteProgram(progID_);
         progID_ = 0;
@@ -18,7 +18,7 @@ bool BasicProgram::loadProgram() {
     }
     glAttachShader(progID_, vertexShader);
     uint32_t fragmentShader = loadShaderFromFile("shader/basic_program.frag",
-                                               GL_FRAGMENT_SHADER);
+                                                 GL_FRAGMENT_SHADER);
     if (fragmentShader == 0) {
         glDeleteShader(vertexShader);
         glDeleteProgram(progID_);
@@ -43,19 +43,31 @@ bool BasicProgram::loadProgram() {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    mvpLoc_ = getUniformLocation("uMVP");
-    if (mvpLoc_ == -1) return false;
+    posToClipLoc_ = getUniformLocation("uPosToClip");
+    if (posToClipLoc_ == -1) return false;
+    
+    posToCamLoc_ = getUniformLocation("uPosToCam");
+    if (posToCamLoc_ == -1) return false;
 
-    nToEyeLoc_ = getUniformLocation("uNormalToEye");
-    if (nToEyeLoc_ == -1) return false;
+    normalToCamLoc_ = getUniformLocation("uNormalToCam");
+    if (normalToCamLoc_ == -1) return false;
 
     return true;
 }
 
-void BasicProgram::updateMVP(const glm::mat4& mvp)
+void BasicProgram::updateNormalToCam(const glm::mat3& ntc)
 {
-    glUniformMatrix4fv(mvpLoc_, 1, GL_FALSE, glm::value_ptr(mvp));
-    glUniformMatrix4fv(nToEyeLoc_, 1, GL_FALSE, glm::value_ptr(transpose(inverse(mvp))));
+    glUniformMatrix3fv(normalToCamLoc_, 1, GL_FALSE, glm::value_ptr(ntc));
+}
+
+void BasicProgram::updatePosToCam(const glm::mat4& ptc)
+{
+    glUniformMatrix4fv(posToCamLoc_, 1, GL_FALSE, glm::value_ptr(ptc));
+}
+
+void BasicProgram::updatePosToClip(const glm::mat4& ptc)
+{
+    glUniformMatrix4fv(posToClipLoc_, 1, GL_FALSE, glm::value_ptr(ptc));
 }
 
 int32_t BasicProgram::getUniformLocation(const char* uniformName) const {

@@ -12,13 +12,16 @@ public:
     ~BasicProgram() {;}
 
     bool loadProgram();
-    void updateMVP(const glm::mat4& mvp);
+    void updateNormalToCam(const glm::mat3& ntc);
+    void updatePosToCam(const glm::mat4& ptc);
+    void updatePosToClip(const glm::mat4& ptc);
 
 private:
     int32_t getUniformLocation(const char* uniformName) const;
 
-    int32_t mvpLoc_;
-    int32_t nToEyeLoc_;
+    int32_t posToClipLoc_;
+    int32_t posToCamLoc_;
+    int32_t normalToCamLoc_;
 
 };
 

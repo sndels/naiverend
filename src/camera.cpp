@@ -96,7 +96,12 @@ void Camera::setPos(const glm::vec3& eye)
                             -eye.x, -eye.y, -eye.z, 1.f );
 }
 
-glm::mat4 Camera::getVP() const
+glm::mat4 Camera::getViewMat() const
 {
-    return projM4f_ * translationM4f_ * orientationM4f_;
+    return translationM4f_ * orientationM4f_;
+}
+
+glm::mat4 Camera::getProjMat() const
+{
+    return projM4f_;
 }

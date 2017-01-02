@@ -8,6 +8,7 @@
 #include "model_parser.hpp"
 
 using glm::vec3;
+using glm::mat3;
 using glm::mat4;
 using std::cerr;
 using std::cin;
@@ -16,7 +17,7 @@ using std::endl;
 Scene::Scene(const float& xres, const float& yres) :
     res2f_(xres, yres),
     modelPos3f_(0.f, 0.f, 0.f),
-    modelScale3f_(2.f, 2.f, 2.f)
+    modelScale3f_(10.f)
 {
     ;
 }
@@ -35,8 +36,8 @@ bool Scene::init()
         return false;
     }
 
-    cam_.setProj(res2f_.x, res2f_.y, 90.f, 1.f, 10.f);
-    cam_.setView(vec3(0.f, 0.f, -2.f), vec3(0.f, 0.f, 0.f));
+    cam_.setProj(res2f_.x, res2f_.y, 90.f, 0.1f, 10.f);
+    cam_.setView(vec3(0.f, 0.f, -4.f), vec3(0.f, 0.f, 0.f));
 
     modelPos3f_ = vec3(0.f, 0.f, 0.f);
     modelScale3f_ = vec3(1.f, 1.f, 1.f);
@@ -73,14 +74,25 @@ void Scene::update()
 void Scene::render()
 {
     pg_.bind();
-    mat4 translate(         1.f,          0.f,          0.f, 0.f,
-                            0.f,          1.f,          0.f, 0.f,
-                            0.f,          0.f,          1.f, 0.f,
+    mat4 translate(          1.f,           0.f,           0.f, 0.f,
+                             0.f,           1.f,           0.f, 0.f,
+                             0.f,           0.f,           1.f, 0.f,
                    modelPos3f_.x, modelPos3f_.y, modelPos3f_.z, 1.f );
-    mat4 scale(modelScale3f_.x,            0.f,            0.f, 0.f,
-                          0.f, modelScale3f_.y,            0.f, 0.f,
-                          0.f,            0.f, modelScale3f_.z, 0.f,
-                          0.f,            0.f,            0.f, 1.f );
-    pg_.updateMVP(cam_.getVP() * translate * scale);
+    mat4 scale(modelScale3f_.x,            0.f,              0.f, 0.f,
+                           0.f, modelScale3f_.y,             0.f, 0.f,
+                           0.f,             0.f, modelScale3f_.z, 0.f,
+                           0.f,             0.f,             0.f, 1.f );
+
+    mat4 viewMat = cam_.getViewMat();
+    mat4 projMat = cam_.getProjMat();
+    
+    mat4 posToCam = viewMat * translate * scale;
+    pg_.updatePosToCam(posToCam);
+    mat3 posToCam3x3(posToCam[0][0], posToCam[0][1], posToCam[0][2],
+                     posToCam[1][0], posToCam[1][1], posToCam[1][2],
+                     posToCam[2][0], posToCam[2][1], posToCam[2][2] );
+    pg_.updateNormalToCam(transpose(inverse(posToCam3x3)));
+    mat4 posToClip = projMat * posToCam;
+    pg_.updatePosToClip(posToClip);
     model_.render();
 }

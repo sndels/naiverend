@@ -17,7 +17,8 @@ public:
     void setView(const glm::vec3& eye, const glm::vec3& target, const glm::vec3& up = glm::vec3(0.f, 1.f, 0.f));
     void movePos(const glm::vec3& offset);
     void setPos(const glm::vec3& eye);
-    glm::mat4 getVP() const;
+    glm::mat4 getViewMat() const;
+    glm::mat4 getProjMat() const;
 
 private:
     glm::vec2 viewDim2f_;
