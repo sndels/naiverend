@@ -10,10 +10,11 @@
 using std::endl;
 
 Texture::Texture() :
+    id_(0),
     width_(0),
     height_(0)
 {
-    glGenTextures(1, &id_);
+    ;
 }
 
 
@@ -26,18 +27,16 @@ void Texture::freeTexture()
 {
     width_ = 0;
     height_ = 0;
-    glBindTexture(GL_TEXTURE_2D, id_);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width_, height_, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, (void*)0);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glDeleteTextures(1, &id_);
 }
 
 void Texture::loadTexture(const std::string& tPath)
 {
     freeTexture();
-    GLsizei w, h;
+
+    int32_t w, h;
     int channels;
-    GLubyte* pixels = stbi_load(tPath.c_str(), &w, &h, &channels, 0);
+    uint8_t* pixels = stbi_load(tPath.c_str(), &w, &h, &channels, 4);
     width_ = w;
     height_ = h;
     if(pixels == NULL) {
@@ -46,7 +45,7 @@ void Texture::loadTexture(const std::string& tPath)
         err << "Error loading pixel data from file!" << endl;
         throw std::runtime_error(err.str());
     }
-
+    
     //Get a new id and bind it to texture
     glGenTextures(1, &id_);
     glBindTexture(GL_TEXTURE_2D, id_);
@@ -75,13 +74,8 @@ void Texture::loadTexture(const std::string& tPath)
 
 void Texture::bind(const GLenum& textureUnit) const
 {
-   glActiveTexture(textureUnit);
-   glBindTexture(GL_TEXTURE_2D, id_);
-}
-
-void Texture::unbind() const
-{
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(textureUnit);
+    glBindTexture(GL_TEXTURE_2D, id_);
 }
 
 GLuint Texture::getID() const

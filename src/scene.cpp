@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "input_handler.hpp"
+#include "math_types.hpp"
 #include "model_parser.hpp"
 
 using glm::vec3;
@@ -17,7 +18,9 @@ using std::endl;
 Scene::Scene(const float& xres, const float& yres) :
     res2f_(xres, yres),
     modelPos3f_(0.f, 0.f, 0.f),
-    modelScale3f_(10.f)
+    modelScale3f_(1.f),
+    modelRotY1f_(PI_F),
+    lightPos3f_(5.f, 7.f, -5.f)
 {
     ;
 }
@@ -26,7 +29,7 @@ bool Scene::init()
 {
     if (!pg_.loadProgram()) return false;
 
-    parseOBJ("res/bunny.obj", model_);
+    parseOBJ("res/head/head.obj", model_);
 
     GLenum error = glGetError();
     if(error != GL_NO_ERROR) {
@@ -39,8 +42,6 @@ bool Scene::init()
     cam_.setProj(res2f_.x, res2f_.y, 90.f, 0.1f, 10.f);
     cam_.setView(vec3(0.f, 0.f, -4.f), vec3(0.f, 0.f, 0.f));
 
-    modelPos3f_ = vec3(0.f, 0.f, 0.f);
-    modelScale3f_ = vec3(1.f, 1.f, 1.f);
     return true;
 }
 
@@ -82,17 +83,29 @@ void Scene::render()
                            0.f, modelScale3f_.y,             0.f, 0.f,
                            0.f,             0.f, modelScale3f_.z, 0.f,
                            0.f,             0.f,             0.f, 1.f );
+    
+    mat4 rotY(cos(modelRotY1f_), 0.f, -sin(modelRotY1f_), 0.f,
+                            0.f, 1.f,                0.f, 0.f,
+              sin(modelRotY1f_), 0.f,  cos(modelRotY1f_), 0.f,
+                            0.f, 0.f,                0.f, 1.f );
 
+    mat4 modelToWorld = translate * rotY * scale;
     mat4 viewMat = cam_.getViewMat();
     mat4 projMat = cam_.getProjMat();
     
-    mat4 posToCam = viewMat * translate * scale;
-    pg_.updatePosToCam(posToCam);
-    mat3 posToCam3x3(posToCam[0][0], posToCam[0][1], posToCam[0][2],
-                     posToCam[1][0], posToCam[1][1], posToCam[1][2],
-                     posToCam[2][0], posToCam[2][1], posToCam[2][2] );
-    pg_.updateNormalToCam(transpose(inverse(posToCam3x3)));
-    mat4 posToClip = projMat * posToCam;
-    pg_.updatePosToClip(posToClip);
-    model_.render();
+    mat4 modelToCam = viewMat * modelToWorld;
+    mat4 modelToClip = projMat * modelToCam;
+    mat3 normalToCam = transpose(inverse(mat3(modelToCam[0][0], modelToCam[0][1], modelToCam[0][2],
+                                              modelToCam[1][0], modelToCam[1][1], modelToCam[1][2],
+                                              modelToCam[2][0], modelToCam[2][1], modelToCam[2][2] )));
+    
+    mat3 worldToCam = mat3(viewMat[0][0], viewMat[0][1], viewMat[0][2],
+                           viewMat[1][0], viewMat[1][1], viewMat[1][2],
+                           viewMat[2][0], viewMat[2][1], viewMat[2][2] );
+    
+    pg_.updateModelToCam(modelToCam);
+    pg_.updateModelToClip(modelToClip);
+    pg_.updateNormalToCam(normalToCam);
+    pg_.updateToLight(normalize(worldToCam * lightPos3f_));
+    model_.render(pg_);
 }

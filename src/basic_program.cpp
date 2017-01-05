@@ -43,14 +43,23 @@ bool BasicProgram::loadProgram() {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    posToClipLoc_ = getUniformLocation("uPosToClip");
-    if (posToClipLoc_ == -1) return false;
+    modelToClipLoc_ = getUniformLocation("uModelToClip");
+    if (modelToClipLoc_ == -1) return false;
     
-    posToCamLoc_ = getUniformLocation("uPosToCam");
-    if (posToCamLoc_ == -1) return false;
+    modelToCamLoc_ = getUniformLocation("uModelToCam");
+    if (modelToCamLoc_ == -1) return false;
 
     normalToCamLoc_ = getUniformLocation("uNormalToCam");
     if (normalToCamLoc_ == -1) return false;
+    
+    diffuseColLoc_ = getUniformLocation("uDiffuseCol");
+    if (diffuseColLoc_ == -1) return false;
+    
+    hasDiffuseTexLoc_ = getUniformLocation("uHasDiffuseTex");
+    if (hasDiffuseTexLoc_ == -1) return false;
+    
+    toLightLoc_ = getUniformLocation("uToLight");
+    if (toLightLoc_ == -1) return false;
 
     return true;
 }
@@ -60,14 +69,29 @@ void BasicProgram::updateNormalToCam(const glm::mat3& ntc)
     glUniformMatrix3fv(normalToCamLoc_, 1, GL_FALSE, glm::value_ptr(ntc));
 }
 
-void BasicProgram::updatePosToCam(const glm::mat4& ptc)
+void BasicProgram::updateModelToCam(const glm::mat4& ptc)
 {
-    glUniformMatrix4fv(posToCamLoc_, 1, GL_FALSE, glm::value_ptr(ptc));
+    glUniformMatrix4fv(modelToCamLoc_, 1, GL_FALSE, glm::value_ptr(ptc));
 }
 
-void BasicProgram::updatePosToClip(const glm::mat4& ptc)
+void BasicProgram::updateModelToClip(const glm::mat4& ptc)
 {
-    glUniformMatrix4fv(posToClipLoc_, 1, GL_FALSE, glm::value_ptr(ptc));
+    glUniformMatrix4fv(modelToClipLoc_, 1, GL_FALSE, glm::value_ptr(ptc));
+}
+
+void BasicProgram::updateDiffuseCol(const glm::vec3& df)
+{
+    glUniform3fv(diffuseColLoc_, 1, glm::value_ptr(df));
+}
+
+void BasicProgram::updateHasDiffuseTex(const bool& b)
+{
+    glUniform1i(hasDiffuseTexLoc_, b);
+}
+
+void BasicProgram::updateToLight(const glm::vec3& l)
+{
+    glUniform3fv(toLightLoc_, 1, glm::value_ptr(l));
 }
 
 int32_t BasicProgram::getUniformLocation(const char* uniformName) const {

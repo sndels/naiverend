@@ -169,44 +169,38 @@ namespace {
 
 void parseOBJ(const std::string& obj, Model& model)
 {
-    std::ifstream in(obj);
-    std::string lineType;
-    uint32_t vertCount = 0u;
-    uint32_t faceCount = 0u;
+    std::string matFile = "";
+
     std::vector<Vertex> verts;
     std::vector<vec3> positions;
     std::vector<vec3> normals;
     std::vector<vec2> texturepositions;
     std::vector<u32vec3> faces;
+
+    std::ifstream in(obj);
+    std::string lineType;
     while (in >> lineType) {
-        if (lineType == "#") {
-            in >> lineType;
-            if (lineType == "vertex") {
-                in >> lineType;
-                in >> lineType;
-                in >> vertCount;
-            }
-            else if (lineType == "face") {
-                in >> lineType;
-                in >> lineType;
-                in >> faceCount;
-            }
-        }
-        else if (lineType == "v") {
+        if (lineType == "mtllib") {
+            in >> matFile;
+        } else if (lineType == "v") {// Parse vertice positions
             vec3 v;
             in >> v.x;
             in >> v.y;
             in >> v.z;
             positions.push_back(v);
-        }
-        else if (lineType == "vn") {
+        } else if (lineType == "vn") {// Parse normal coordinates
             vec3 n;
             in >> n.x;
             in >> n.y;
             in >> n.z;
             normals.push_back(n);
-        }
-        else if (lineType == "f") {
+        } else if (lineType == "vt") {// Parse texture coordinates
+            vec2 t;
+            in >> t.x;
+            in >> t.y;
+            t.y = 1 - t.y;// Reverse y-coordinates as stb_image loads top first
+            texturepositions.push_back(t);
+        } else if (lineType == "f") {// Parse faces, differing indices for v/t/n not supported
             u32vec3 f;
             uint32_t nil;
             in >> f[2];
@@ -238,10 +232,55 @@ void parseOBJ(const std::string& obj, Model& model)
         }
         for (auto& n : normals) n = normalize(n);
     }
+    
+    if (texturepositions.size() == 0) {
+        for (auto i = 0; i < positions.size(); i++) {
+            verts.push_back({positions[i], normals[i], vec2(0.f)});
+        }
+    } else {
+        for (auto i = 0; i < positions.size(); i++) {
+            verts.push_back({positions[i], normals[i], texturepositions[i]});
+        }
+    }
+    
+    std::shared_ptr<Material> mat = std::make_shared<Material>();
+    if (matFile != "") {
+    	int pathEnd = obj.find_last_of("/\\");
+    	std::string path = obj.substr(0, pathEnd + 1);
+        parseMTL(path, matFile, *mat);
+    }
+    model.update(verts, faces, mat);
+}
 
-    for (auto i = 0; i < positions.size(); i++)  verts.push_back({positions[i], normals[i]});
-
-    model.update(verts, faces);
+void parseMTL(const std::string& path, const std::string& matFile, Material& mat)
+{
+    std::ifstream in(path + matFile);
+    std::string lineType;
+    while (in >> lineType) {
+        if (lineType == "#") {
+            getline(in, lineType);
+        } else if (lineType == "newmtl") {
+            in >> mat.materialStr_;
+        } else if (lineType == "map_Kd") {// Load diffuse texture
+            std::string texFile;
+            in >> texFile;
+            mat.loadDfTex(path + texFile);
+        } else if (lineType == "map_norm") {// Load normal map
+            std::string normalFile;
+            in >> normalFile;
+            mat.loadNormalMap(path + normalFile);
+        } else if (lineType == "Ks") {
+            vec3 ks;
+            in >> ks.x;
+            in >> ks.y;
+            in >> ks.z;
+            mat.specularCol3f_ = ks;
+        } else if (lineType == "Ks") {
+            float ns;
+            in >> ns;
+            mat.specularExp1f_ = ns;
+        }
+    }
 }
 
 void parseLayerData(const std::string& headerFile, Model& model)
@@ -329,5 +368,6 @@ void parseLayerData(const std::string& headerFile, Model& model)
     lastLayer.clear();
     lastRow.clear();
 
-    model.update(verts, faces);
+    std::shared_ptr<Material> mat = std::make_shared<Material>();
+    model.update(verts, faces, mat);
 }

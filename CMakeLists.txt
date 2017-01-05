@@ -25,6 +25,7 @@ set(SOURCES
     src/gl_core_4_1.c
     src/input_handler.cpp
     src/main.cpp
+    src/material.cpp
     src/model.cpp
     src/model_parser.cpp
     src/scene.cpp
@@ -36,6 +37,7 @@ set(HEADERS
     src/camera.hpp
     src/gl_core_4_1.h
     src/input_handler.hpp
+    src/material.hpp
     src/math_types.hpp
     src/mc_tables.hpp
     src/model.hpp

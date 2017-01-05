@@ -3,6 +3,8 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include "material.hpp"
+#include "basic_program.hpp"
 
 struct Vertex
 {
@@ -17,12 +19,13 @@ public:
     Model();
     ~Model();
 
-    void update(const std::vector<Vertex>& verts, const std::vector<glm::u32vec3>& faces);
-    void render() const;
+    void update(const std::vector<Vertex>& verts, const std::vector<glm::u32vec3>& faces, std::shared_ptr<Material> mtl);
+    void render(BasicProgram& sp) const;
 
 private:
     std::vector<Vertex> verts_;
     std::vector<glm::u32vec3> faces_;
+    std::shared_ptr<Material> mat_;
 
     uint32_t vao_;
     uint32_t ibo_;

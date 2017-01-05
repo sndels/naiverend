@@ -1,0 +1,10 @@
+# File created by ZBrush
+# ToolType: PolyMesh3D
+# www.zbrush.com
+# Modified to give normal map as map_norm
+newmtl defaultMat
+map_Kd lambertian.png
+#map_bump -bm 0.001 bump.png
+map_norm normal.png
+Ks .15 .15 .15
+Ns 50

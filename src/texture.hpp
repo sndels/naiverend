@@ -13,7 +13,6 @@ public:
     void freeTexture();
 
     void bind(const GLenum& textureUnit) const;
-    void unbind() const;
 
     uint32_t getID() const;
 

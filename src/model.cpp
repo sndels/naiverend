@@ -19,7 +19,7 @@ Model::~Model()
     glDeleteBuffers(1, &ibo_);
 }
 
-void Model::update(const std::vector<Vertex>& verts, const std::vector<glm::u32vec3>& faces)
+void Model::update(const std::vector<Vertex>& verts, const std::vector<glm::u32vec3>& faces, std::shared_ptr<Material> mat)
 {
     glBindVertexArray(vao_);
 
@@ -36,6 +36,9 @@ void Model::update(const std::vector<Vertex>& verts, const std::vector<glm::u32v
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texture));
+    
 
     // Unbinds for safety, vao first!
     glBindVertexArray(0);
@@ -44,11 +47,18 @@ void Model::update(const std::vector<Vertex>& verts, const std::vector<glm::u32v
 
     verts_ = std::move(verts);
     faces_ = std::move(faces);
+    mat_ = mat;
 }
 
-void Model::render() const
+void Model::render(BasicProgram& sp) const
 {
+    sp.updateHasDiffuseTex(mat_->hasDfTex());
+    sp.updateDiffuseCol(mat_->diffuseCol3f_);
+
     glBindVertexArray(vao_);
+
+    mat_->bindTextures(GL_TEXTURE0, GL_TEXTURE1);
     glDrawElements(GL_TRIANGLES, faces_.size()*3, GL_UNSIGNED_INT, 0);
+    
     glBindVertexArray(0);
 }

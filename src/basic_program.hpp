@@ -13,15 +13,26 @@ public:
 
     bool loadProgram();
     void updateNormalToCam(const glm::mat3& ntc);
-    void updatePosToCam(const glm::mat4& ptc);
-    void updatePosToClip(const glm::mat4& ptc);
+    void updateModelToCam(const glm::mat4& ptc);
+    void updateModelToClip(const glm::mat4& ptc);
+    void updateDiffuseCol(const glm::vec3& df);
+    void updateHasDiffuseTex(const bool& b);
+    void updateToLight(const glm::vec3& l);
 
 private:
     int32_t getUniformLocation(const char* uniformName) const;
 
-    int32_t posToClipLoc_;
-    int32_t posToCamLoc_;
+    // Vert uniforms
+    int32_t modelToClipLoc_;
+    int32_t modelToCamLoc_;
+
+    // Frag uniforms
     int32_t normalToCamLoc_;
+
+    int32_t hasDiffuseTexLoc_;
+    int32_t diffuseColLoc_;
+    
+    int32_t toLightLoc_;
 
 };
 

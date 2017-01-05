@@ -1,17 +1,23 @@
 #version 410
 
+// Inputs
 layout(location = 0) in vec3 pos0;
 layout(location = 1) in vec3 norm0;
+layout(location = 2) in vec2 tex0;
 
-uniform mat4 uPosToClip;
-uniform mat4 uPosToCam;
+// Transformations
+uniform mat4 uModelToClip;
+uniform mat4 uModelToCam;
 
-out vec3 position0;
-out vec3 normal0;
+// Outputs
+out vec3 posVar;
+out vec3 normVar;
+out vec2 texVar;
 
 void main()
 {
-    position0 = (uPosToCam * vec4(pos0, 1.0)).xyz;
-    normal0 = norm0;
-    gl_Position  = uPosToClip * vec4(pos0, 1.0);
+    posVar = (uModelToCam * vec4(pos0, 1)).xyz;
+    normVar = norm0;
+    texVar = tex0;
+    gl_Position  = uModelToClip * vec4(pos0, 1);
 }

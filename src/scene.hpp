@@ -23,6 +23,8 @@ private:
     glm::vec2 res2f_;
     glm::vec3 modelPos3f_;
     glm::vec3 modelScale3f_;
+    float modelRotY1f_;
+    glm::vec3 lightPos3f_;
 
 };
 
