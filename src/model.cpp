@@ -53,6 +53,7 @@ void Model::update(const std::vector<Vertex>& verts, const std::vector<glm::u32v
 void Model::render(BasicProgram& sp) const
 {
     sp.updateHasDiffuseTex(mat_->hasDfTex());
+    sp.updateHasNormalMap(mat_->hasNormalMap());
     sp.updateDiffuseCol(mat_->diffuseCol3f_);
 
     glBindVertexArray(vao_);

@@ -58,8 +58,22 @@ bool BasicProgram::loadProgram() {
     hasDiffuseTexLoc_ = getUniformLocation("uHasDiffuseTex");
     if (hasDiffuseTexLoc_ == -1) return false;
     
+    hasNormalMapLoc_ = getUniformLocation("uHasNormalMap");
+    if (hasNormalMapLoc_ == -1) return false;
+    
     toLightLoc_ = getUniformLocation("uToLight");
     if (toLightLoc_ == -1) return false;
+    
+    glUseProgram(progID_);
+   
+    // Map texture units to samplers
+    int32_t texture = getUniformLocation("diffuseSampler");
+    if (texture == -1) return false;
+    glUniform1i(texture, 0);
+    
+    texture = getUniformLocation("normalSampler");
+    if (texture == -1) return false;
+    glUniform1i(texture, 1);
 
     return true;
 }
@@ -87,6 +101,11 @@ void BasicProgram::updateDiffuseCol(const glm::vec3& df)
 void BasicProgram::updateHasDiffuseTex(const bool& b)
 {
     glUniform1i(hasDiffuseTexLoc_, b);
+}
+
+void BasicProgram::updateHasNormalMap(const bool& b)
+{
+    glUniform1i(hasNormalMapLoc_, b);
 }
 
 void BasicProgram::updateToLight(const glm::vec3& l)

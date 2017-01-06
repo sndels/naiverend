@@ -30,17 +30,23 @@ const float lightIntensity = 0.15f;
 void main()
 {
     // Diffuse
-    vec4 diffuseCol;
+    vec3 diffuseCol;
     if (uHasDiffuseTex) {
-        diffuseCol = (texture(normalSampler, texVar));
+        diffuseCol = texture(diffuseSampler, texVar).xyz;
     } else {
-        diffuseCol = vec4(uDiffuseCol, 1);
+        diffuseCol = uDiffuseCol;
     }
     
     // Lighting
     vec3 sumCol = vec3(0);
 
-    vec3 N = normalize(uNormalToCam * normVar);
+    vec3 mappedNormal;
+    if (uHasNormalMap) {
+        mappedNormal = (texture(normalSampler, texVar) * 2.f - 1.f).xyz;
+    } else {
+        mappedNormal = normVar;
+    }
+    vec3 N = normalize(uNormalToCam * mappedNormal);
     vec3 V = -normalize(posVar);
     vec3 diffuse = diffuseCol.xyz * max(0, dot(N, uToLight));
     

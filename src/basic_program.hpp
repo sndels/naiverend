@@ -17,6 +17,7 @@ public:
     void updateModelToClip(const glm::mat4& ptc);
     void updateDiffuseCol(const glm::vec3& df);
     void updateHasDiffuseTex(const bool& b);
+    void updateHasNormalMap(const bool& b);
     void updateToLight(const glm::vec3& l);
 
 private:
@@ -30,6 +31,7 @@ private:
     int32_t normalToCamLoc_;
 
     int32_t hasDiffuseTexLoc_;
+    int32_t hasNormalMapLoc_;
     int32_t diffuseColLoc_;
     
     int32_t toLightLoc_;
