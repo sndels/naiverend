@@ -99,9 +99,9 @@ void Scene::render()
                                               modelToCam[1][0], modelToCam[1][1], modelToCam[1][2],
                                               modelToCam[2][0], modelToCam[2][1], modelToCam[2][2] )));
     
-    mat3 worldToCam = mat3(viewMat[0][0], viewMat[0][1], viewMat[0][2],
+    mat3 worldToCam = transpose(inverse(mat3(viewMat[0][0], viewMat[0][1], viewMat[0][2],
                            viewMat[1][0], viewMat[1][1], viewMat[1][2],
-                           viewMat[2][0], viewMat[2][1], viewMat[2][2] );
+                           viewMat[2][0], viewMat[2][1], viewMat[2][2] )));
     
     pg_.updateModelToCam(modelToCam);
     pg_.updateModelToClip(modelToClip);

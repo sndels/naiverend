@@ -55,6 +55,12 @@ bool BasicProgram::loadProgram() {
     diffuseColLoc_ = getUniformLocation("uDiffuseCol");
     if (diffuseColLoc_ == -1) return false;
     
+    specularColLoc_ = getUniformLocation("uSpecularCol");
+    if (specularColLoc_ == -1) return false;
+    
+    specularExpLoc_ = getUniformLocation("uSpecularExp");
+    if (specularExpLoc_ == -1) return false;
+    
     hasDiffuseTexLoc_ = getUniformLocation("uHasDiffuseTex");
     if (hasDiffuseTexLoc_ == -1) return false;
     
@@ -96,6 +102,16 @@ void BasicProgram::updateModelToClip(const glm::mat4& ptc)
 void BasicProgram::updateDiffuseCol(const glm::vec3& df)
 {
     glUniform3fv(diffuseColLoc_, 1, glm::value_ptr(df));
+}
+
+void BasicProgram::updateSpecularCol(const glm::vec3& s)
+{
+    glUniform3fv(specularColLoc_, 1, glm::value_ptr(s));
+}
+
+void BasicProgram::updateSpecularExp(const float& s)
+{
+    glUniform1f(specularExpLoc_, s);
 }
 
 void BasicProgram::updateHasDiffuseTex(const bool& b)

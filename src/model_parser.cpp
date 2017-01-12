@@ -275,7 +275,7 @@ void parseMTL(const std::string& path, const std::string& matFile, Material& mat
             in >> ks.y;
             in >> ks.z;
             mat.specularCol3f_ = ks;
-        } else if (lineType == "Ks") {
+        } else if (lineType == "Ns") {
             float ns;
             in >> ns;
             mat.specularExp1f_ = ns;

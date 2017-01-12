@@ -24,12 +24,12 @@ in vec2 texVar;
 
 out vec4 fragColor;
 
-const float lightIntensity = 0.15f;
+const float lightIntensity = 0.8f;
 
 
 void main()
 {
-    // Diffuse
+    // Diffuse color
     vec3 diffuseCol;
     if (uHasDiffuseTex) {
         diffuseCol = texture(diffuseSampler, texVar).xyz;
@@ -37,20 +37,25 @@ void main()
         diffuseCol = uDiffuseCol;
     }
     
-    // Lighting
-    vec3 sumCol = vec3(0);
-
+    // Normals
     vec3 mappedNormal;
     if (uHasNormalMap) {
         mappedNormal = (texture(normalSampler, texVar) * 2.f - 1.f).xyz;
     } else {
         mappedNormal = normVar;
     }
-    vec3 N = normalize(uNormalToCam * mappedNormal);
-    vec3 V = -normalize(posVar);
-    vec3 diffuse = diffuseCol.xyz * max(0, dot(N, uToLight));
     
-    sumCol += diffuse;
+    // Lighting
+    vec3 sumCol = vec3(0);
+
+    vec3 N = normalize(uNormalToCam * mappedNormal);
+    vec3 diffuse = diffuseCol.xyz * max(0, dot(N, uToLight));
+   
+    vec3 V = -normalize(posVar);
+    vec3 h = normalize(V + uToLight);
+    vec3 specular = uSpecularCol * pow(max(0, dot(N, h)), uSpecularExp);
+    
+    sumCol += lightIntensity * (diffuse + specular);
     
     fragColor = vec4(sumCol, 1);
 }

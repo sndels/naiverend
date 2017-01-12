@@ -55,6 +55,8 @@ void Model::render(BasicProgram& sp) const
     sp.updateHasDiffuseTex(mat_->hasDfTex());
     sp.updateHasNormalMap(mat_->hasNormalMap());
     sp.updateDiffuseCol(mat_->diffuseCol3f_);
+    sp.updateSpecularCol(mat_->specularCol3f_);
+    sp.updateSpecularExp(mat_->specularExp1f_);
 
     glBindVertexArray(vao_);
 
