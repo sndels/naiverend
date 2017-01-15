@@ -28,14 +28,14 @@ namespace {
 
     // Generates positions from [-1,-1] to [1,1] with value 0
     std::vector<IsoVert> genEmptyLayer(const uint32_t& resX, const uint32_t& resY,
-                                       const uint32_t& aspX, const uint32_t& aspY,
+                                       const float& aspX, const float& aspY,
                                        const float& posZ)
     {
         std::vector<IsoVert> layerVerts;
         float scaleX = 2.f / resX;
         float scaleY = 2.f / resY;
-        for (int j = 0; j < resY; ++j) {
-            for(int i = 0; i < resX; ++i) {
+        for (auto j = 0u; j < resY; ++j) {
+            for(auto i = 0u; i < resX; ++i) {
                 layerVerts.push_back({vec3((((i % resX)) * scaleX - 1.f) / aspX,
                                            -(j * scaleY - 1.f) / aspY,
                                            posZ), 0});
@@ -47,7 +47,7 @@ namespace {
     // Reads file with set parameters and ties read values to positions from [-1,-1] to [1,1]
     // Currently takes mac-ordered files
     std::vector<IsoVert> readVolumeLayer(std::string filename, const uint32_t& resX, const uint32_t& resY,
-                                         const uint32_t& aspX, const uint32_t& aspY, const float& posZ)
+                                         const float& aspX, const float& aspY, const float& posZ)
     {
         std::ifstream in(filename, std::ios::binary);
 
@@ -234,11 +234,11 @@ void parseOBJ(const std::string& obj, Model& model)
     }
     
     if (texturepositions.size() == 0) {
-        for (auto i = 0; i < positions.size(); i++) {
+        for (auto i = 0u; i < positions.size(); i++) {
             verts.push_back({positions[i], normals[i], vec2(0.f)});
         }
     } else {
-        for (auto i = 0; i < positions.size(); i++) {
+        for (auto i = 0u; i < positions.size(); i++) {
             verts.push_back({positions[i], normals[i], texturepositions[i]});
         }
     }

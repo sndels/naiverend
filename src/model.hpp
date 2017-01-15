@@ -2,6 +2,7 @@
 #define MODEL_H
 
 #include <glm/glm.hpp>
+#include <memory>
 #include <vector>
 #include "material.hpp"
 #include "basic_program.hpp"
