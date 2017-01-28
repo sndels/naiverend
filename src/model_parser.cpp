@@ -1,4 +1,4 @@
-// parseLayerData is based on Paul Bourke's implementation found at
+// parseVolumeCube and lerpIntersection are based on Paul Bourke's implementation found at
 // http://paulbourke.net/geometry/polygonise/
 
 #include "model_parser.hpp"
@@ -232,7 +232,7 @@ void parseOBJ(const std::string& obj, Model& model)
         }
         for (auto& n : normals) n = normalize(n);
     }
-    
+
     if (texturepositions.size() == 0) {
         for (auto i = 0u; i < positions.size(); i++) {
             verts.push_back({positions[i], normals[i], vec2(0.f)});
@@ -242,7 +242,7 @@ void parseOBJ(const std::string& obj, Model& model)
             verts.push_back({positions[i], normals[i], texturepositions[i]});
         }
     }
-    
+
     std::shared_ptr<Material> mat = std::make_shared<Material>();
     if (matFile != "") {
     	int pathEnd = obj.find_last_of("/\\");
