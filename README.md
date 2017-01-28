@@ -1,7 +1,7 @@
 # skunkwork
 A lightweight OpenGL renderer with naive hardcoded shader program
 
-Loosely based on [OGLdev-tutorials](ogldev.atspace.co.uk) with marching cubes implementation built upon Paul Bourke's [paper](http://paulbourke.net/geometry/polygonise/).
+Loosely based on [OGLdev-tutorials](http://ogldev.atspace.co.uk) with marching cubes implementation built upon Paul Bourke's [paper](http://paulbourke.net/geometry/polygonise/).
 
 Model to be loaded is currently harcoded in scene.cpp as is it's scale. Interaction includes a virtual trackball -implementation and moving the model with arrows and shift - up/down.
 
