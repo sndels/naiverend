@@ -3,6 +3,8 @@ A lightweight OpenGL renderer with naive hardcoded shader program
 
 Loosely based on [OGLdev-tutorials](http://ogldev.atspace.co.uk) with marching cubes implementation built upon Paul Bourke's [paper](http://paulbourke.net/geometry/polygonise/).
 
+Cmake build should work^tm on vs2016 and osx (clang) if GLFW3 is installed.
+
 Model to be loaded is currently harcoded in scene.cpp as is it's scale. Interaction includes a virtual trackball -implementation and moving the model with arrows and shift - up/down.
 
 Layer file parser is a marching cubes implementation which takes numbered (\*.1 - \*.n) layer files with a header in the same folder. Header is constructed as follows:
