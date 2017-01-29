@@ -12,7 +12,7 @@ Layer file parser is a marching cubes implementation which takes numbered (\*.1 
 ```
 name        MRbrain
 filename    MRbrain.
-threshold    1400
+threshold   1400
 resX        256
 resY        256
 layers      109
