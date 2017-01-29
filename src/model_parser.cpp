@@ -307,7 +307,7 @@ void parseLayerData(const std::string& headerFile, Model& model)
             header >> objName;
         else if (objType == "filename")
             header >> layerFile;
-        else if (objType == "treshold")
+        else if (objType == "threshold")
             header >> treshold;
         else if (objType == "layers")
             header >> layers;
