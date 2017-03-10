@@ -8,6 +8,9 @@
 #include "math_types.hpp"
 #include "model_parser.hpp"
 
+#include "imgui/imgui.h"
+#include "imgui/examples/opengl3_example/imgui_impl_glfw_gl3.h"
+
 using glm::vec3;
 using glm::mat3;
 using glm::mat4;
@@ -74,6 +77,16 @@ void Scene::update()
 
 void Scene::render()
 {
+    // Simple imgui-window
+    // mousepos could be passed to imgui before event-handling and check this
+    // to not pass mouse-events to program if hovering
+    ImGui::GetIO().MouseDrawCursor = ImGui::IsMouseHoveringAnyWindow();
+    {
+        ImGui::SliderFloat("x", &modelPos3f_.x, -2.f, 2.f);
+        ImGui::SliderFloat("y", &modelPos3f_.y, -2.f, 2.f);
+        ImGui::SliderFloat("z", &modelPos3f_.z, -2.f, 2.f);
+        ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    }
     pg_.bind();
     mat4 translate(          1.f,           0.f,           0.f, 0.f,
                              0.f,           1.f,           0.f, 0.f,

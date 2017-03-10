@@ -17,6 +17,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CLANG_COVERAGE_LINK_FLAGS}")
 endif()
 
+include_directories(ext ext/imgui)
+
 set(EXECUTABLE_NAME ${PROJECT_NAME})
 
 set(SOURCES
@@ -31,6 +33,10 @@ set(SOURCES
     src/scene.cpp
     src/shader_program.cpp
     src/texture.cpp
+    ext/imgui/imgui.cpp
+    ext/imgui/imgui_demo.cpp
+    ext/imgui/imgui_draw.cpp
+    ext/imgui_impl_glfw_gl3.cpp
 )
 set(HEADERS
     src/basic_program.hpp

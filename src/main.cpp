@@ -7,6 +7,9 @@
 #include "input_handler.hpp"
 #include "scene.hpp"
 
+#include "imgui/imgui.h"
+#include "imgui/examples/opengl3_example/imgui_impl_glfw_gl3.h"
+
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -51,6 +54,7 @@ int main(void)
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(windowPtr);
+    ImGui_ImplGlfwGL3_Init(windowPtr, true);
 
     // Load gl-functions (glLoadGen-header)
     if (ogl_LoadFunctions() == ogl_LOAD_FAILED) {
@@ -105,9 +109,15 @@ int main(void)
     // Run the main loop
     while (!glfwWindowShouldClose(windowPtr)) {
         glfwPollEvents();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        ImGui_ImplGlfwGL3_NewFrame();
+
         scene.update();
+        
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         scene.render();
+        ImGui::Render();
+
         glfwSwapBuffers(windowPtr);
     }
 
