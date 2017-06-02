@@ -18,7 +18,7 @@ using std::cin;
 namespace {
     const static GLsizei XRES = 1280;
     const static GLsizei YRES = 720;
-    const static char* WINDOW_TITLE = "skunkwork";
+    const static char* WINDOW_TITLE = "naiverend";
 }
 
 static void errorCallback(int error, const char* description)

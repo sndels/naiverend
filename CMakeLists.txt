@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 
-project(skunkwork)
+project(naiverend)
 
 # Enable debug symbols by default
 if(CMAKE_BUILD_TYPE STREQUAL "")
